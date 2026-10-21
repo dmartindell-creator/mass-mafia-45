@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Mass Mafia 45</title>
+<style>
+:root{--red:#e8202f;--ink:#111;--mut:#666;--line:#d9d9d9;--green:#16a34a;--amber:#d97706;--bg:#fff;--soft:#f6f6f6}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:17px}
+header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:10px 14px;padding-top:max(10px,env(safe-area-inset-top))}
+.logo{font-weight:900;letter-spacing:.08em;font-size:17px;display:flex;align-items:center;gap:8px}
+.logo:before{content:"";border-left:13px solid var(--red);border-top:8px solid transparent;border-bottom:8px solid transparent}
+.pill{font-size:13px;font-weight:700;padding:6px 10px;border-radius:999px;background:var(--soft);color:var(--mut);display:flex;align-items:center;gap:6px;border:0}
+.pill:before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.pill.ok{color:var(--green);background:#e9f8ef}.pill.wait{color:var(--amber);background:#fff4e0}
+main{max-width:640px;margin:0 auto;padding:12px 14px 170px}
+nav{position:fixed;bottom:0;left:0;right:0;z-index:30;background:#fff;border-top:2px solid var(--ink);display:flex;padding-bottom:env(safe-area-inset-bottom)}
+nav button{flex:1;border:0;background:none;padding:12px 0 14px;font-size:14px;font-weight:700;color:var(--mut)}
+nav button.on{color:var(--red)}
+h1{font-size:24px;margin:6px 0 2px}h2{font-size:20px;margin:0}h3{font-size:16px;margin:12px 0 6px}
+.sub{color:var(--mut);font-size:14px;margin:2px 0 8px;line-height:1.35}
+.daynav{display:flex;gap:8px;margin-bottom:10px}
+.daynav button,.btn{min-height:50px;border:2px solid var(--ink);background:#fff;font-weight:800;font-size:16px;padding:0 12px;color:var(--ink);border-radius:0}
+.daynav button{flex:1}
+.btn.red{background:var(--red);border-color:var(--red);color:#fff}.btn.blk{background:var(--ink);color:#fff}.btn.full{width:100%}.btn.grn{background:var(--green);border-color:var(--green);color:#fff}
+.btn.sm{min-height:40px;font-size:14px}
+.card{border:2px solid var(--ink);padding:12px;margin:12px 0}
+.card.green{border-color:var(--green);background:#e9f8ef}.card.amber{border-color:var(--amber);background:#fff7e8}
+.block{border-top:2px solid var(--ink);padding:12px 0 6px;margin-top:8px}
+.block.now{border-top-color:var(--red)}
+.block.now>.bh h2:after{content:"NOW";background:var(--red);color:#fff;font-size:11px;padding:3px 6px;margin-left:8px;vertical-align:middle;letter-spacing:.06em}
+.block.done{opacity:.55}
+.bh{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.clock{color:var(--red);font-weight:800;font-size:15px;white-space:nowrap}
+.note{font-size:14px;color:var(--mut);margin:4px 0 8px;line-height:1.35}
+.row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #eee;min-height:60px}
+.row .lab{flex:1;font-weight:700;font-size:17px;line-height:1.25}
+.row .lab small{display:block;font-weight:500;color:var(--mut);font-size:14px}
+.ck{width:54px;height:54px;flex:none;border:2px solid var(--ink);background:#fff;font-size:26px;font-weight:900;color:transparent;border-radius:0}
+.ck.on{background:var(--green);border-color:var(--green);color:#fff}
+.tm{flex:none;min-width:64px;height:54px;border:2px solid var(--red);color:var(--red);background:#fff;font-weight:800;font-size:15px;border-radius:0}
+.setrow{display:grid;grid-template-columns:62px 1fr 1fr 54px;gap:8px;align-items:center;padding:6px 0}
+.setrow .sl{font-weight:800;font-size:15px}.setrow .sl small{display:block;font-weight:500;color:var(--mut);font-size:12px}
+input,select,textarea{font:inherit;font-size:20px;min-height:54px;border:1px solid #bbb;padding:6px 10px;width:100%;border-radius:0;background:#fff;color:var(--ink);text-align:center}
+textarea{text-align:left;font-size:16px;min-height:80px}
+select{text-align:left;font-size:16px}
+input::placeholder{color:#aaa}
+.colh{display:grid;grid-template-columns:62px 1fr 1fr 54px;gap:8px;font-size:12px;color:var(--mut);text-align:center}
+.ex{margin:10px 0 4px}.ex .bh h3{margin:0}
+.tag{color:var(--red);font-weight:800;font-size:15px}
+.last{font-size:13px;color:var(--mut)}.next{font-size:14px;font-weight:700;margin:4px 0}
+.next.drop{color:var(--red)}.next.add{color:var(--green)}
+#timer{position:fixed;left:0;right:0;bottom:58px;z-index:25;background:var(--ink);color:#fff;padding:10px 14px;display:flex;align-items:center;gap:12px;margin-bottom:env(safe-area-inset-bottom)}
+#timer[hidden]{display:none}
+#timer .big{font-size:40px;font-weight:900;font-variant-numeric:tabular-nums;min-width:110px}
+#timer .tl{flex:1;font-weight:700}#timer .tl small{display:block;color:#bbb;font-weight:500}
+#timer button{min-height:46px;background:#fff;color:var(--ink);border:0;font-weight:800;padding:0 14px}
+.clockbar{display:flex;align-items:center;gap:10px;background:var(--soft);padding:10px;margin:8px 0}
+.clockbar .big{font-size:30px;font-weight:900;font-variant-numeric:tabular-nums}
+.clockbar .tl{flex:1;font-size:14px}
+.wk{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;border-bottom:1px solid #eee;padding:8px 0}
+.st{min-width:104px;min-height:48px;border:2px solid var(--ink);background:#fff;font-weight:800;font-size:14px;border-radius:0}
+.st.Full{background:var(--green);border-color:var(--green);color:#fff}.st.Minimum{background:#86efac;border-color:#16a34a;color:#064e1d}
+.chips{display:flex;flex-wrap:wrap;gap:6px}.chip{border:2px solid var(--line);padding:6px 8px;font-size:13px;font-weight:800;background:#fff}
+.chip.g{background:var(--green);border-color:var(--green);color:#fff}.chip.y{background:#86efac;border-color:#16a34a}.chip.r{border-color:var(--red);color:var(--red)}.chip.cur{outline:3px solid var(--ink)}
+.big3{display:flex;gap:8px;margin:8px 0}.big3>div{flex:1;background:var(--soft);padding:10px;text-align:center}.big3 b{display:block;font-size:30px}
+.hist{border-bottom:1px solid #eee;padding:10px 0}.hist b{font-size:16px}
+.small{font-size:13px;color:var(--mut)}
+.seg{display:flex;margin:8px 0}.seg button{flex:1;min-height:46px;border:2px solid var(--ink);background:#fff;font-weight:800;margin-left:-2px}.seg button.on{background:var(--red);border-color:var(--red);color:#fff}
+.hide{display:none}
+</style>
+</head>
+<body>
+<header><div class="logo">MASS MAFIA 45</div><span class="pill ok" id="sync">Saved on this phone</span></header>
+<main id="app"></main>
+<div id="timer" hidden><div class="big" id="tbig">0:00</div><div class="tl" id="tlab"></div><button data-act="tskip">Next</button><button data-act="tstop">Stop</button></div>
+<nav id="nav">
+<button data-tab="today" class="on">Today</button><button data-tab="week">Week</button><button data-tab="history">History</button><button data-tab="body">Body</button><button data-tab="data">Data</button>
+</nav>
+<script>
+const KEY='mm45_v1', TRIAL1='2026-10-21', TRIAL2='2026-10-23', START='2026-10-26', END='2027-01-17';
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DOW=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const DOWL=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const pad=n=>String(n).padStart(2,'0');
+const d2s=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+const s2d=s=>{const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d,12)};
+const addDays=(s,n)=>{const d=s2d(s);d.setDate(d.getDate()+n);return d2s(d)};
+const diffDays=(a,b)=>Math.round((s2d(a)-s2d(b))/864e5);
+const todayS=()=>d2s(new Date());
+const dowOf=s=>s2d(s).getDay();
+const weekOf=s=>{const n=diffDays(s,START);return n<0?0:Math.floor(n/7)+1};
+const mondayOf=s=>addDays(s,-((dowOf(s)+6)%7));
+const fmt=s=>{const d=s2d(s);return DOWL[d.getDay()]+', '+MON[d.getMonth()]+' '+d.getDate()};
+const fmtS=s=>{const d=s2d(s);return MON[d.getMonth()]+' '+d.getDate()};
+const esc=x=>String(x==null?'':x).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const mmss=t=>{t=Math.max(0,Math.round(t));return Math.floor(t/60)+':'+pad(t%60)};
+const round5=x=>Math.round(x/5)*5;
+const slug=x=>x.toLowerCase().replace(/[^a-z0-9]+/g,'-');
+
+function phaseOf(w){const c=((w-1)%6)+1;return c<=2?'A':c<=4?'B':'C'}
+const ph4=w=>w<=4?0:w<=8?1:w<=10?2:3;
+const ABS={A:['In and outs','Side crunches','Russian twists'],B:['Hanging bent leg raises','Hanging side bent leg raises','Bicycle crunches'],C:['Hanging straight leg raises','Side leg raises','Ab rollouts']};
+const PRESS={A:'Machine shoulder press',B:'Dumbbell shoulder press',C:'Standing barbell press'};
+const CURLS=['Barbell curl','Hammer curl','Reverse curl'];
+const STRETCH=[
+ ['Hamstrings','On your back, other knee bent. Raise the straight leg with your quads, then pull gently.'],
+ ['Quadriceps','On your side, bottom knee hugged to chest. Grab the top ankle, drive the knee back, then pull.'],
+ ['Glutes','On your back, one leg long. Pull the bent knee toward the opposite shoulder.'],
+ ['Calves','Seated, one leg bent. Lift your toes toward the knee, then pull the toes.'],
+ ['Chest','Standing, palms together at shoulder height. Squeeze shoulder blades and reach the arms back.'],
+ ['Shoulders and biceps','Hands clasped behind your back, palms away. Lift straight arms away from your back.'],
+ ['Triceps','Hand on the same shoulder, lift the elbow to the ceiling with help from the other hand.'],
+ ['Lats','Raise a straight arm overhead, then pull that elbow behind your head with the other hand.'],
+ ['Low back','Seated, feet wide and flat. Fold forward through your legs and pull on your feet if you can.'],
+ ['Forearms','Arm straight, palm out like a stop sign. Pull the fingers back with the other hand.']];
+const TYPES={sq:'Squat day',dl:'Deadlift day',speed:'Speed and elastic',tissue:'Tissue and mobility',jump:'Jump and agility',rest:'Rest day',min:'Minimum day',trialoff:'No session (trial week)',before:'Before the program',after:'Program finished'};
+const WHERE={sq:'Gym',dl:'Gym',speed:'Track, field or park',tissue:'Home',jump:'Gym, or outside without boxes',rest:'Home',min:'Anywhere with a pull-up bar'};
+
+function planned(s){
+ if(s<TRIAL1) return 'before';
+ if(s>END) return 'after';
+ const w=weekOf(s);
+ if(w===0) return s===TRIAL1?'dl':s===TRIAL2?'sq':'trialoff';
+ return ['rest','sq','speed','dl','tissue','sq','jump'][dowOf(s)];
+}
+const isTest=s=>{const w=weekOf(s);return dowOf(s)===6&&[1,6,12].includes(w)};
+function typeName(s,t){t=t||dayType(s);if(t==='jump'&&isTest(s))return 'Performance tests';if((t==='sq'||t==='dl')&&weekOf(s)===0)return 'Trial run: '+TYPES[t];return TYPES[t]||t}
+
+let _bi=0;
+function C(label,dose,tm,small){return {t:'c',label,dose:dose||'',tm:tm||null,small:small||''}}
+function S(ex,n,target,rest){return {t:'s',ex,n,target,rest:rest||0}}
+function N(label,unit){return {t:'n',label,unit}}
+function sets(ex,reps,rest){return reps.map((r,i)=>S(ex,i+1,r,rest))}
+const stretchItems=(names,dose)=>names.map(n=>C(n,dose,null,(STRETCH.find(x=>x[0]===n)||['',''])[1]));
+const ALL10=STRETCH.map(x=>x[0]);
+
+function liftSession(s,lift){
+ const w=weekOf(s), trial=w===0, P=trial?'A':phaseOf(w), taper=w===12, A=P==='A'&&!taper, fri12=taper&&dowOf(s)===5;
+ const main=lift==='dl'?'Deadlift':'Squat', press=PRESS[P], abs=ABS[P];
+ const mainReps=taper?[8,6]:(P==='A'?[21,21,21]:[8,6,4,4]);
+ const benchReps=taper?[8,6]:(P==='B'?[21,21,21]:[8,6,4,4]);
+ const B=[];
+ B.push({title:'Warm-up',clock:'0:00-2:00',start:0,items:[C('Treadmill or bike, brisk','2 min',[['Bike or treadmill',120]])]});
+ B.push({title:'Mobility',clock:'2:00-5:00',start:120,items:[C('Hip flexor','5 each side'),C('Side lunge','5 each side'),C('Frog','6'),C('Pigeon','5 each side'),C('Down dog','30 s',[['Down dog',30]])]});
+ B.push({title:'Walk to the rack',clock:'5:00-6:00',start:300,items:[C('Load the bar')]});
+ if(fri12) B.push({title:'Retest',clock:'',note:'Right after the warm-up. Max reps.',items:[S('Squat retest',1,'max'),S('Bench retest',1,'max')]});
+ B.push({title:'Ramp sets',clock:'6:00-8:00',start:360,items:[C('2 light ramp sets of 8','2 x 8'),C('Load working weight')]});
+ B.push({title:main,clock:A?'8:00-13:45':(taper?'8:00':'8:00-12:30'),start:480,tag:mainReps.join(', ').replace('21, 21, 21','3 x 21'),
+  note:taper?'8, 6. Same weights as week 11. 60 s rest.':P==='A'?'Sets start at 8:00, 10:15, 12:30. 60 s rest.':'Add weight as the reps drop. Done by 12:30. 60 s rest.',
+  items:sets(main,mainReps,60)});
+ if(!taper) B.push({title:'Hip thrust',clock:A?'14:00-17:00':'',start:A?840:null,tag:'1 x 21',note:'Setup takes most of this.',items:sets('Hip thrust',[21],0)});
+ B.push({title:'Bench press',clock:A?'17:00-23:05':(P==='C'?'17:00':''),start:A||P==='C'?1020:null,tag:benchReps.join(', ').replace('21, 21, 21','3 x 21'),
+  note:taper?'8, 6. Same weights as week 11. 60 s rest.':P==='B'?'2 sets of 8 at half bodyweight first. Then 3 x 21. Use a spotter. 60 s rest.':(A?'Sets start at 18:30, 20:00, 21:25, 22:45. Add weight each set.':'Add weight each set. 60 s rest.'),
+  items:[C(P==='B'&&!taper?'2 warm-up sets of 8 at half bodyweight':'2 light sets of 8','2 x 8'),...sets('Bench press',benchReps,60)]});
+ if(!taper){
+  const bi={title:'Biceps superset',clock:A?'23:05-28:05':'',start:A?1385:null,tag:'3 rounds',note:'3 curl moves x 30 s each, back to back. 20 s rest between rounds. Dumbbells by the bench.',items:[]};
+  for(let r=1;r<=3;r++){bi.items.push(C('Round '+r+': start the 30/30/30 timer','30 s each, then 20 s rest',[...CURLS.map(c=>[c,30]),['Rest',20]]));CURLS.forEach(c=>bi.items.push(S(c,r,'30 s',0)));}
+  B.push(bi);
+ }
+ const mv=[C('Walk to the pull-up and dip station')];
+ if(P==='C') mv.push(C('Set up the standing barbell press bar before round 1'));
+ B.push({title:'Move',clock:A?'28:05-29:00':'',start:A?1685:null,items:mv});
+ const rs=[['Hamstrings','Quadriceps'],['Glutes','Calves'],['Chest','Shoulders and biceps']];
+ const absItems=()=>abs.map(a=>C(a,'15'));
+ const plank=C('Plank, then rest minute','60 s plank + 60 s rest',[['Plank',60],['Rest: stretch',60]]);
+ const rounds=taper?1:2, clocks=[['29:00-35:00',1740],['35:00-41:00',2100]];
+ for(let r=1;r<=rounds;r++){
+  B.push({title:'Circuit round '+r,clock:A?clocks[r-1][0]:'',start:A?clocks[r-1][1]:null,
+   note:(r===1?'Assist machine or band is fine for pull-ups and dips. Curls come first, so drop a rep if you need to. ':'')+(P!=='A'&&r===1?'Hanging moves use the pull-up bar.':''),
+   items:[S('Pull-ups',r,8,0),S(press,r,8,0),S('Dips',r,8,0),...absItems(),{...plank},...stretchItems(rs[r-1],'6 reps, 2-count, each side')]});
+ }
+ if(!taper) B.push({title:'Abs round 3',clock:A?'41:00-45:00':'',start:A?2460:null,note:'Abs finish the session. Running long? Do the plank only.',items:[...absItems(),{...plank},...stretchItems(rs[2],'6 reps, 2-count')]});
+ else {
+  B.push({title:'Abs round 2',clock:'',items:[...absItems(),{...plank}]});
+  B.push({title:'Full 10 stretches',clock:'',note:'Use the spare time.',items:stretchItems(ALL10,'8 to 10 reps, 2-count')});
+ }
+ let sub=trial?'Trial run. Phase A workout. Set your weights and learn the clock. Squat and deadlift: start at bodyweight + 30 lb, go for 21.':
+  taper?(fri12?'Week 12 taper with retest. About 40 min total.':'Week 12 taper: same weights as week 11, half the sets. About 30 min.'):
+  P==='A'?'Phase A: 3 x 21 legs, 8, 6, 4, 4 bench. 45 min. Keep moving.':P==='B'?'Phase B: heavy legs, 21-rep bench. 45 to 46 min. Keep moving.':'Phase C: heavy legs, heavy bench. About 46 min. Keep moving.';
+ return {sub,blocks:B,lift:true};
+}
+function speedSession(s){
+ const k=ph4(Math.max(1,weekOf(s)));
+ const pick=a=>a[k];
+ const B=[];
+ B.push({title:'Warm-up',clock:'0-9 min',start:0,items:[C('Easy jog','5 min',[['Easy jog',300]]),C('High knees and butt kicks','25 yd up and back'),C('Walking lunges','25 yd'),C('A-skips','2 x 20 yd'),C('Pogo hops, stiff ankles','2 x 15'),C('Build-up runs to 80%',pick(['2 x 40 yd','2 x 40 yd','2 x 40 yd','1 x 40 yd']))]});
+ const acc=[C('Falling starts, 10 yd',pick(['4 reps','3 reps','3 reps','2 reps']))];
+ const sled=pick(['','4 reps','3 reps','']); if(sled) acc.push(C('Sled sprints, 10 yd, moderate load',sled,null,'Only if you are at a gym or turf.'));
+ acc.push(C('20 yd sprints',pick(['4 reps','3 reps','3 reps','2 reps'])));
+ B.push({title:'Acceleration',clock:'9-19 min',start:540,note:'All-out. Rest about 1 min per 10 yd sprinted. If you slow down, stop.',items:acc});
+ const top=[C('Flying 10s',pick(['2 reps','3 reps','4 reps','2 reps']),null,'Build up over 20 yd, then all-out for 10.')];
+ const lng=pick(['','2 x 60 yd','2 x 80 yd','1 x 80 yd']); if(lng) top.push(C('60 to 80 yd runs at 95%',lng,[['Rest',240]],'4 to 6 min rest.'));
+ B.push({title:'Top speed',clock:'19-28 min',start:1140,items:top});
+ B.push({title:'Jump power',clock:'28-34 min',start:1680,items:[C('Super jump set',pick(['2 sets, 1 min rest','2 sets banded, 1 min rest','3 sets banded, 1 min rest','1 set, bodyweight']),[['Rest',60]],'5 straight leg jumps, 5 knees to chest, 5 lunge jumps, 5 deep squat jumps'),C('1-step vertical touches',pick(['5 reps','5 reps','6 reps','3 reps']))]});
+ B.push({title:'Tendon loading',clock:'34-40 min',start:2040,note:'Calf: push max into a bar that cannot move, 3 s per hold, about 3 s between holds, 1 to 2 min between sets.',items:[C('Single-leg calf isometric, pinned bar or Smith',pick(['3 x 4 holds each leg','3 x 4 holds each leg','3 x 4 holds each leg','3 x 4 holds each leg'])),C('Spanish squat hold, band behind knees',pick(['3 x 30 s','3 x 45 s','3 x 45 s','2 x 30 s']),[['Spanish squat',k===0||k===3?30:45]])]});
+ B.push({title:'10 stretches',clock:'40-45 min',start:2400,items:stretchItems(ALL10,'6 reps, 2-count')});
+ return {sub:'Speed and elastic. 45 min. Track, field or a flat park.',blocks:B};
+}
+function jumpSession(s,outside){
+ const w=Math.max(1,weekOf(s)), k=ph4(w), pick=a=>a[k];
+ const wu={title:'Warm-up',clock:'0-7 min',start:0,items:[C('High knee leg raises','25 yd up and back'),C('Butt kicks','25 yd up and back'),C('Lunge stretch','25 yd'),C('Frog jumps','25 yd back'),C('Pogo hops','2 x 15')]};
+ if(isTest(s)){
+  const t=w===6?[['Broad jump','in'],['40 yard dash','sec']]:[['Vertical jump','in'],['Broad jump','in'],['5-10-5 pro agility','sec'],['40 yard dash','sec'],['100 yard dash','sec']];
+  return {sub:'Week '+w+' performance tests. They replace the jump and agility session.',blocks:[wu,{title:'Tests',clock:'',note:'Full rest between tries. Enter your best.',items:t.map(x=>N(x[0],x[1]))},{title:'10 stretches',clock:'',items:stretchItems(ALL10,'6 reps, 2-count')}]};
+ }
+ const jp=[C('Super jump set',pick(['2 sets, 1 min rest','2 sets banded, 1 min rest','3 sets banded, 1 min rest','1 set, bodyweight']),[['Rest',60]],'5 straight leg jumps, 5 knees to chest, 5 lunge jumps, 5 deep squat jumps')];
+ if(!outside){
+  jp.push(C('Box jumps: 10 jump off and up',pick(['1 round','2 rounds, 2 min rest','2 rounds, 2 min rest','1 round'])));
+  if(w%2) jp.push(C('Box ladder: 5 jumps up to each box',pick(['1 round','2 rounds','2 rounds','1 round']),null,'Box ladder this week. Highest box next week.'));
+  else jp.push(C('Highest box',pick(['10 jumps','10 jumps','8 jumps, max height','5 jumps']),null,'Highest box this week. Box ladder next week.'));
+  const dj=pick(['','3 x 4','4 x 3','']); if(dj) jp.push(C('Depth jumps, 12 to 15 in box',dj,null,'Quick off the ground.'));
+  const tb=pick(['','3 x 3','4 x 3','2 x 2']); if(tb) jp.push(C('Trap bar jumps, light (20 to 30% of deadlift)',tb));
+ } else { jp.push(C('Pogo hops','2 x 15')); jp.push(C('Broad jumps','',null,'Outside version.')); }
+ jp.push(C('1-step vertical touches, chase a new mark',pick(['10 reps','10 reps','10 reps','5 reps'])));
+ return {sub:'Jump and agility. 45 min. '+(outside?'Outside version: no box, depth or trap bar jumps.':'Gym version with boxes and trap bar.'),outsideToggle:true,blocks:[wu,
+  {title:'Jump program',clock:'7-25 min',start:420,items:jp},
+  {title:'Agility',clock:'25-38 min',start:1500,note:'Full effort, rest 60 to 90 s.',items:[C('Sprint 10 yd, stop in 3 steps',pick(['4 reps','3 reps','3 reps','2 reps'])),C('5-10-5 pro agility',pick(['4 reps, technique','5 reps','5 reps, all-out','3 reps'])),C('Partner mirror drill, 10 s',pick(['4 reps','5 reps','6 reps','3 reps'])),C('Point-and-go reaction sprints',pick(['6 reps','8 reps','8 reps','4 reps']))]},
+  {title:'10 stretches',clock:'38-43 min',start:2280,items:stretchItems(ALL10,'6 reps, 2-count')},
+  {title:'Buffer',clock:'43-45 min',start:2580,items:[C('Done. Water and walk it off.')]}]};
+}
+function tissueSession(s){
+ const k=ph4(Math.max(1,weekOf(s))), pick=a=>a[k];
+ return {sub:'Tissue and mobility at home. 45 min. Counts as conditioning. Needs a foam roller, a band, and a light dumbbell or kettlebell.',blocks:[
+  {title:'Easy cardio and foam roll',clock:'',note:'Bike if you can. Roll slow, 90 s per spot.',items:[C('Easy bike','8 to 10 min',[['Easy bike',480]]),...['Quads','Adductors','Glutes','Calves','Lats','Upper back'].map(x=>C('Foam roll '+x.toLowerCase(),'90 s',[[x,90]]))]},
+  {title:'Loaded mobility',clock:'',note:'3 s lowering on every rep. Own the bottom position.',items:[C('Cossack squats',pick(['3 x 6 each side','3 x 8 each side','3 x 8 each side','2 x 6 each side'])),C('Deep split squats',pick(['3 x 6 each leg','3 x 8 each leg','3 x 8 each leg','2 x 6 each leg'])),C('Single-leg RDL',pick(['3 x 6 each leg','3 x 8 each leg','3 x 8 each leg','2 x 6 each leg'])),C('Jefferson curl, light',pick(['2 x 8','2 x 10','2 x 10','1 x 8'])),C('Tib raises',pick(['3 x 15','3 x 20','3 x 20','2 x 15']))]},
+  {title:'Injury-proofing',clock:'',note:'Slow and controlled.',items:[C('Nordic hamstring curls',pick(['2 x 4','3 x 5','3 x 6','2 x 3'])),C('Copenhagen plank',pick(['3 x 15 s each side','3 x 25 s each side','3 x 30 s each side','2 x 15 s each side']),[['Copenhagen plank',[15,25,30,15][k]]])]},
+  {title:'Elastic and fascial flow',clock:'',note:'Smooth, rhythmic, multi-direction. This is your stretch today.',items:[C('Leg and arm swings, all directions','2 min',[['Swings',120]]),C('90/90 hip switches','8 each side'),C("World's greatest stretch",'5 each side'),C('Couch stretch','60 s each side',[['Couch stretch left',60],['Couch stretch right',60]]),C('Dead hang','30 to 45 s',[['Dead hang',45]])]}]};
+}
+function minSession(){
+ const B=[];
+ for(let r=1;r<=3;r++) B.push({title:'Round '+r,clock:'',note:r===1?'Rest as needed between rounds.':'',items:[C('Squats','20'),C('In-and-outs','15'),C('Push-ups','10'),C('Pull-ups','5')]});
+ return {sub:'Minimum day. About 10 to 12 min. Counts toward the floor of 4. It does not replace a gym lift day.',blocks:B};
+}
+function buildSession(s){
+ const t=dayType(s), d=day(s,false)||{};
+ _bi=0;
+ let ses=null;
+ if(t==='sq'||t==='dl') ses=liftSession(s,t);
+ else if(t==='speed') ses=speedSession(s);
+ else if(t==='jump') ses=jumpSession(s,!!d.outside);
+ else if(t==='tissue') ses=tissueSession(s);
+ else if(t==='min') ses=minSession();
+ else return null;
+ ses.blocks.forEach((b,bi)=>b.items.forEach((it,ii)=>{if(it.t==='c')it.id=bi+'|'+slug(b.title)+'|'+slug(it.label);if(it.t==='n')it.id='test|'+slug(it.label)}));
+ return ses;
+}
+function snackPlan(s){
+ const odd=s2d(s).getDate()%2===1, t=dayType(s), lift=(t==='sq'||t==='dl');
+ const items=[C('Jump rope','5 min',[['Jump rope',300]])];
+ if(odd) items.push(C('Single-leg calf hold','3 x 30 s each leg',[['Calf hold left',30],['Calf hold right',30]],'Odd day. About 70% effort. Tap the timer 3 times.'));
+ else items.push(C('Wall sit','3 x 45 s',[['Wall sit',45]],'Even day. Tap the timer 3 times.'));
+ if(lift) ['Triceps','Lats','Low back','Forearms'].forEach(n=>items.push(C(n+' stretch','30 s',[[n,30]],(STRETCH.find(x=>x[0]===n)||['',''])[1])));
+ items.forEach(it=>it.id='snack|'+slug(it.label));
+ return {lift,items,label:'Tendon snack'+(lift?' + last 4 stretches':'')};
+}
+
+/* ===== State ===== */
+let st;
+function load(){try{st=JSON.parse(localStorage.getItem(KEY))||{}}catch(e){st={}}st.days=st.days||{};st.meas=st.meas||[];st.queue=st.queue||{};st.set=st.set||{};}
+function save(){localStorage.setItem(KEY,JSON.stringify(st))}
+function day(s,create=true){if(!st.days[s]&&create)st.days[s]={checks:{},sets:{},reps:{},tests:{},snack:{}};const d=st.days[s];if(d){d.checks=d.checks||{};d.sets=d.sets||{};d.reps=d.reps||{};d.tests=d.tests||{};d.snack=d.snack||{};}return d}
+function dayType(s){const d=st.days[s];return (d&&d.type)||planned(s)}
+const isLift=t=>t==='sq'||t==='dl';
+function latestBW(){const m=st.meas.filter(x=>x.bw).sort((a,b)=>a.date<b.date?1:-1);return m.length?+m[0].bw:null}
+
+/* history lookups */
+function lastFor(ex,reps,before){
+ const key=reps?reps.join(','):null;
+ const dates=Object.keys(st.days).filter(x=>x<before).sort().reverse();
+ for(const dt of dates){const d=st.days[dt];const a=d.sets&&d.sets[ex];if(!a||!a.some(x=>x&&x.done))continue;if(key&&(d.reps[ex]||[]).join(',')!==key)continue;return {date:dt,sets:a,reps:d.reps[ex]||[]}}
+ return null;
+}
+const RULE=['Squat','Deadlift','Bench press','Hip thrust'];
+function evaluate(ex,arr,reps){
+ if(!arr||!arr.some(x=>x&&x.done)) return null;
+ let drop=false,all=true;
+ reps.forEach((t,i)=>{const x=arr[i];if(!x||!x.done||x.r===''){all=false;return}const r=+x.r;if(typeof t!=='number'){return}if(t===21&&r<15)drop=true;if(t<21&&r<=t-2)drop=true;if(r<t)all=false;});
+ const rule=RULE.includes(ex);
+ const per=reps.map((t,i)=>{const x=arr[i];if(!x||x.w===''||x.w==null)return '';const w=+x.w;if(!rule)return w;return drop?round5(w*0.9):all?w+5:w});
+ let kind=rule?(drop?'drop':all?'add':'same'):'last';
+ const txt={drop:'Too heavy: drop about 10% next time.',add:'Every rep hit: add 5 to 10 lb next time.',same:'Keep the same weights next time.',last:''}[kind];
+ return {kind,per,txt};
+}
+const setsStr=a=>(a||[]).filter(x=>x&&x.done).map(x=>(x.w===''?'BW':x.w)+'x'+x.r).join(', ');
+function weekWeight(ex,wk){const dates=Object.keys(st.days).filter(d=>weekOf(d)===wk&&d>=START).sort();for(const d of dates){const a=st.days[d].sets[ex];if(a&&a[0]&&a[0].done&&a[0].w!=='')return +a[0].w}return null}
+function exInfo(s,ex,reps){
+ const w=weekOf(s), bw=latestBW();
+ let hint='',ph=reps.map(()=>''),last=null,nxt=null;
+ if(ex==='Squat retest'||ex==='Bench retest'){const v=weekWeight(ex==='Squat retest'?'Squat':'Bench press',ex==='Squat retest'?1:3);hint=ex==='Squat retest'?'Week 1 starting weight'+(v?': '+v+' lb':' (not logged)')+'. Max reps.':'Week 3 starting weight'+(v?': '+v+' lb':' (not logged)')+'. Max reps.';if(v)ph=[v];return {hint,ph,last,nxt};}
+ if(w===12&&(ex==='Squat'||ex==='Deadlift'||ex==='Bench press')){last=lastFor(ex,null,s);if(last){ph=reps.map((r,i)=>last.sets[i]&&last.sets[i].w!==''?last.sets[i].w:'');hint='Same weights as week 11.'}return {hint,ph,last,nxt}}
+ last=lastFor(ex,reps,s);
+ if(last){nxt=evaluate(ex,last.sets,last.reps);if(nxt)ph=reps.map((r,i)=>nxt.per[i]!==''&&nxt.per[i]!=null?nxt.per[i]:'');}
+ else {
+  const any=lastFor(ex,null,s);
+  if((ex==='Squat'||ex==='Deadlift')&&reps[0]===21&&!any){hint='Start at bodyweight + 30 lb'+(bw?' = '+(bw+30)+' lb':' (add your weight on the Body tab)')+'. Go for 21.';if(bw)ph=reps.map(()=>round5(bw+30))}
+  else if(ex==='Bench press'&&reps[0]===21){hint='Start at half bodyweight + 25 lb'+(bw?' = '+round5(bw/2+25)+' lb, after 2 x 8 at '+round5(bw/2)+' lb':'')+'. Aim for 21 every set. Use a spotter.';if(bw)ph=reps.map(()=>round5(bw/2+25))}
+  else if(any){ph=reps.map((r,i)=>any.sets[i]&&any.sets[i].w!==''?any.sets[i].w:'');hint='New rep scheme. Start from your last weights and beat them.';last=any}
+ }
+ return {hint,ph,last,nxt};
+}
+
+/* ===== Save status (no cloud sync; data lives in localStorage) ===== */
+const qSet=()=>{},qSession=()=>{},qSnack=()=>{},qTest=()=>{},qMeas=()=>{},queue=()=>{},flush=()=>Promise.resolve();
+function updPill(){const p=document.getElementById('sync');const d=st.lastExport;p.textContent=d?'Saved. Backup '+fmtS(d2s(new Date(d))):'Saved on this phone';p.className='pill ok'}
+/* ===== Progress ===== */
+function progress(s){const ses=buildSession(s);if(!ses)return {done:0,total:0};const d=day(s,false)||{checks:{},sets:{},tests:{}};let done=0,total=0;
+ ses.blocks.forEach(b=>b.items.forEach(it=>{total++;if(itemDone(d,it))done++}));return {done,total}}
+function itemDone(d,it){if(it.t==='c')return !!(d.checks&&d.checks[it.id]);if(it.t==='s'){const a=d.sets&&d.sets[it.ex];return !!(a&&a[it.n-1]&&a[it.n-1].done)}if(it.t==='n')return !!(d.tests&&d.tests[it.label]);return false}
+
+/* ===== Timer ===== */
+let T=null,actx=null,wake=null;
+function beep(n){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();for(let i=0;i<(n||2);i++){const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=880;o.connect(g);g.connect(actx.destination);const t0=actx.currentTime+i*0.25;g.gain.setValueAtTime(0.3,t0);g.gain.exponentialRampToValueAtTime(0.001,t0+0.2);o.start(t0);o.stop(t0+0.22)}}catch(e){}try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}}
+async function startTimer(steps){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();actx.resume&&actx.resume()}catch(e){}T={steps,i:0,end:Date.now()+steps[0][1]*1000};try{if(navigator.wakeLock&&!wake)wake=await navigator.wakeLock.request('screen')}catch(e){}tick()}
+function stopTimer(){T=null;document.getElementById('timer').hidden=true;try{wake&&wake.release();wake=null}catch(e){}}
+function nextStep(){if(!T)return;T.i++;if(T.i>=T.steps.length){beep(3);stopTimer();return}beep(2);T.end=Date.now()+T.steps[T.i][1]*1000}
+function tick(){
+ if(T){const left=(T.end-Date.now())/1000;if(left<=0)nextStep();if(T){const el=document.getElementById('timer');el.hidden=false;document.getElementById('tbig').textContent=mmss((T.end-Date.now())/1000);const nx=T.steps[T.i+1];document.getElementById('tlab').innerHTML=esc(T.steps[T.i][0])+'<small>'+(nx?'Next: '+esc(nx[0])+' '+mmss(nx[1]):'Last one')+'</small>'}}
+ const cb=document.getElementById('clk');if(cb){const d=st.days[view.date];if(d&&d.clock){const el=(Date.now()-d.clock)/1000;cb.textContent=mmss(el);const pl=document.getElementById('clkplan');if(pl)pl.textContent=planAt(el)}}
+}
+setInterval(tick,250);
+let curStarts=[];
+function planAt(el){let cur=null;curStarts.forEach(x=>{if(x.start<=el)cur=x});return cur?'Plan says: '+cur.title+' ('+cur.clock+')':''}
+
+/* ===== Views ===== */
+let view={tab:'today',date:todayS(),week:null};
+const app=document.getElementById('app');
+function render(){document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.tab===view.tab));
+ const y=window.scrollY;app.innerHTML=({today:vToday,week:vWeek,history:vHistory,body:vBody,data:vData})[view.tab]();window.scrollTo(0,y);updPill();tick()}
+
+function itemHTML(s,d,it,bi){
+ if(it.t==='c'){const on=d.checks[it.id];return '<div class="row"><div class="lab">'+esc(it.label)+(it.dose?' <span class="tag">'+esc(it.dose)+'</span>':'')+(it.small?'<small>'+esc(it.small)+'</small>':'')+'</div>'+(it.tm?'<button class="tm" data-act="timer" data-tm="'+esc(JSON.stringify(it.tm))+'">'+(it.tm.length>1?'Start':mmss(it.tm[0][1]))+'</button>':'')+'<button class="ck'+(on?' on':'')+'" data-act="chk" data-id="'+esc(it.id)+'" aria-label="done">&#10003;</button></div>'}
+ if(it.t==='n'){return '<div class="row"><div class="lab">'+esc(it.label)+'<small>'+esc(it.unit)+'</small></div><input style="max-width:140px" inputmode="decimal" data-test="'+esc(it.label)+'" data-unit="'+esc(it.unit)+'" value="'+esc(d.tests[it.label]||'')+'"></div>'}
+ return '';
+}
+function setRows(s,d,ex,list,info){
+ let h='<div class="colh"><div>Set</div><div>Weight (lb)</div><div>Reps done</div><div></div></div>';
+ list.forEach(it=>{const x=(d.sets[ex]||[])[it.n-1]||{};const ph=info&&info.ph[it.n-1]!==undefined?info.ph[it.n-1]:'';
+  h+='<div class="setrow"><div class="sl">Set '+it.n+'<small>'+(typeof it.target==='number'?it.target+' reps':esc(it.target))+'</small></div><input inputmode="decimal" data-ex="'+esc(ex)+'" data-n="'+it.n+'" data-f="w" placeholder="'+esc(ph===''?'lb':ph)+'" value="'+esc(x.w==null?'':x.w)+'"><input inputmode="numeric" data-ex="'+esc(ex)+'" data-n="'+it.n+'" data-f="r" placeholder="'+esc(typeof it.target==='number'?it.target:'')+'" value="'+esc(x.r==null?'':x.r)+'"><button class="ck'+(x.done?' on':'')+'" data-act="set" data-ex="'+esc(ex)+'" data-n="'+it.n+'" data-rest="'+(it.rest||0)+'" data-target="'+esc(it.target)+'" data-ph="'+esc(ph)+'">&#10003;</button></div>'});
+ return h;
+}
+function blockHTML(s,d,b,bi,nowIdx){
+ const done=b.items.every(it=>itemDone(d,it));
+ let h='<div class="block'+(bi===nowIdx?' now':'')+(done?' done':'')+'"><div class="bh"><h2>'+esc(b.title)+'</h2><span class="clock">'+esc(b.clock||'')+(b.tag?' &nbsp;'+esc(b.tag):'')+'</span></div>'+(b.note?'<div class="note">'+esc(b.note)+'</div>':'');
+ // group set items by exercise, in order of first appearance, but keep check items in place
+ const its=b.items;let i=0;
+ while(i<its.length){const it=its[i];
+  if(it.t==='s'){const ex=it.ex;const grp=[];while(i<its.length&&its[i].t==='s'&&its[i].ex===ex){grp.push(its[i]);i++}
+   const allReps=repsFor(s,ex);const info=exInfo(s,ex,allReps);const cur=evaluate(ex,d.sets[ex],allReps);
+   h+='<div class="ex">'+(b.title!==ex?'<div class="bh"><h3>'+esc(ex)+'</h3><span class="tag">'+esc(fmtReps(allReps,ex))+'</span></div>':'');
+   if(info.hint)h+='<div class="note">'+esc(info.hint)+'</div>';
+   if(info.last)h+='<div class="last">Last time ('+fmtS(info.last.date)+'): '+esc(setsStr(info.last.sets))+'</div>';
+   if(info.nxt&&info.nxt.txt)h+='<div class="next '+info.nxt.kind+'">From last time: '+esc(info.nxt.txt.replace(' next time',' today'))+'</div>';
+   h+=setRows(s,d,ex,grp,info);
+   if(cur&&cur.txt&&grp.length&&grp[grp.length-1].n===allReps.length&&RULE.includes(ex))h+='<div class="next '+cur.kind+'">'+esc(cur.txt)+(cur.per.some(x=>x!=='')?' ('+cur.per.filter(x=>x!=='').join(', ')+' lb)':'')+'</div>';
+   h+='</div>';continue}
+  h+=itemHTML(s,d,it,bi);i++}
+ return h+'</div>';
+}
+let _repsCache={};
+function repsFor(s,ex){return (_repsCache[ex]||[])}
+function fmtReps(r,ex){if(!r.length)return '';if(typeof r[0]!=='number')return r.length+' x '+r[0];return r.every(x=>x===r[0])?r.length+' x '+r[0]:r.join(', ')}
+function vToday(){
+ const s=view.date,t=dayType(s),d=day(s,false)||{checks:{},sets:{},reps:{},tests:{},snack:{}};
+ const w=weekOf(s);
+ let h='<div class="daynav"><button data-act="day" data-n="-1">&#8249; Prev</button><button data-act="day" data-n="0">Today</button><button data-act="day" data-n="1">Next &#8250;</button></div>';
+ h+='<h1>'+(s===todayS()?'Today: ':'')+esc(fmt(s))+'</h1>';
+ h+='<div class="sub"><b>'+(s<START?(s>=TRIAL1?'Trial week':''):(w<=12?'Week '+w+(w<=12?' of 12':''):''))+(s>=START&&w<=12?' &middot; Phase '+phaseOf(w):'')+'</b></div>';
+ h+='<div class="card'+(d.status==='Full'||d.status==='Minimum'?' green':'')+'"><h2>'+esc(typeName(s))+'</h2><div class="sub">'+esc(WHERE[t]||'')+'</div>';
+ if(d.status)h+='<div style="font-weight:800;color:var(--green)">Done: '+(d.status==='Minimum'?'Minimum day':'Full workout')+'</div>';
+ h+='</div>';
+ const ses=buildSession(s);
+ if(t==='before'){const ns=TRIAL1;h+='<div class="card"><b>Program starts Wed Oct 21</b> with trial run 1 (deadlift day). Trial run 2 is Fri Oct 23. Week 1 starts Mon Oct 26.<br><br><button class="btn full" data-act="goto" data-d="'+ns+'">Show trial run 1</button></div>'}
+ else if(t==='after'){h+='<div class="card">The 12 weeks are done (ended Sun Jan 17, 2027). Check your History.</div>'}
+ else if(t==='trialoff'){h+='<div class="card">No session today. Trial runs are Wed Oct 21 and Fri Oct 23. Week 1 starts Mon Oct 26.</div>'}
+ else if(t==='rest'){h+='<div class="card"><b>Rest.</b> Tendon snack only.</div>'}
+ if(ses){
+  _repsCache={};ses.blocks.forEach(b=>b.items.forEach(it=>{if(it.t==='s'){(_repsCache[it.ex]=_repsCache[it.ex]||[])[it.n-1]=it.target}}));
+  curStarts=ses.blocks.filter(b=>b.start!=null).map(b=>({start:b.start,title:b.title,clock:b.clock}));
+  if(ses.sub)h+='<div class="note" style="font-size:15px;color:var(--ink)">'+esc(ses.sub)+'</div>';
+  if(ses.outsideToggle)h+='<div class="seg"><button data-act="outside" data-v="0" class="'+(d.outside?'':'on')+'">Gym</button><button data-act="outside" data-v="1" class="'+(d.outside?'on':'')+'">Outside</button></div>';
+  if(curStarts.length)h+='<div class="clockbar"><div class="big" id="clk">'+(d.clock?'':'0:00')+'</div><div class="tl" id="clkplan">'+(d.clock?'':'Start the clock when you start the warm-up.')+'</div>'+(d.clock?'<button class="btn sm" data-act="clock" data-v="0">Reset</button>':'<button class="btn sm red" data-act="clock" data-v="1">Start</button>')+'</div>';
+  let nowIdx=ses.blocks.findIndex(b=>!b.items.every(it=>itemDone(d,it)));
+  ses.blocks.forEach((b,bi)=>h+=blockHTML(s,d,b,bi,nowIdx));
+  h+='<h3>Notes</h3><textarea data-notes="1" placeholder="How did it feel?">'+esc(d.notes||'')+'</textarea>';
+  if(d.status)h+='<button class="btn full" style="margin-top:10px" data-act="finish" data-v="">Undo: mark not done</button>';
+  else h+='<button class="btn full grn" style="margin-top:12px;min-height:60px;font-size:18px" data-act="finish" data-v="'+(t==='min'?'Minimum':'Full')+'">Workout done</button>';
+ }
+ if(t!=='before'&&t!=='after'&&t!=='rest'&&t!=='trialoff'&&t!=='min'&&!d.status)h+='<button class="btn full" style="margin-top:10px" data-act="type" data-v="min">Busy day? Do the Minimum Day instead</button>';
+ if(t!=='before'&&t!=='after'){
+  h+='<div style="margin-top:10px"><select data-act="typesel"><option value="">Change this day\'s session...</option>'+['sq','dl','speed','tissue','jump','min','rest'].map(k=>'<option value="'+k+'"'+(k===t&&d.type?' selected':'')+'>'+TYPES[k]+'</option>').join('')+'<option value="reset">Back to the plan ('+esc(TYPES[planned(s)])+')</option></select></div>';
+ }
+ if(s>=TRIAL1&&s<=END){
+  const sp=snackPlan(s);const sd=d.snack||{};
+  h+='<div class="block'+(d.snackDone?' done':'')+'" style="margin-top:24px"><div class="bh"><h2>Afternoon: '+esc(sp.label)+'</h2><span class="clock">after 1 PM</span></div><div class="note">At least 6 hours after training. About '+(sp.lift?'10':'8')+' min.</div>';
+  sp.items.forEach(it=>{const on=sd[it.id];h+='<div class="row"><div class="lab">'+esc(it.label)+' <span class="tag">'+esc(it.dose)+'</span>'+(it.small?'<small>'+esc(it.small)+'</small>':'')+'</div><button class="tm" data-act="timer" data-tm="'+esc(JSON.stringify(it.tm))+'">'+(it.tm.length>1?'Start':mmss(it.tm[0][1]))+'</button><button class="ck'+(on?' on':'')+'" data-act="snk" data-id="'+esc(it.id)+'">&#10003;</button></div>'});
+  h+=d.snackDone?'<button class="btn full" style="margin-top:8px" data-act="snackdone" data-v="0">Undo tendon snack</button>':'<button class="btn full blk" style="margin-top:8px" data-act="snackdone" data-v="1">Tendon snack done</button>';
+  h+='</div>';
+ }
+ return h;
+}
+function weekStats(mon){let wk=0,gym=0,snack=0;const days=[];for(let i=0;i<7;i++){const s=addDays(mon,i),d=st.days[s]||{},t=dayType(s);if(d.status==='Full'||d.status==='Minimum')wk++;if(d.status==='Full'&&isLift(t))gym++;if(d.snackDone)snack++;days.push({s,d,t})}
+ return {wk,gym,snack,days,floor:wk>=4&&gym>=2,goal:wk>=5&&gym>=2}}
+function vWeek(){
+ const mon=view.week||mondayOf(view.date>=TRIAL1?view.date:TRIAL1);view.week=mon;
+ const w=weekOf(mon),ws=weekStats(mon);
+ let h='<div class="daynav"><button data-act="wk" data-n="-7">&#8249; Prev</button><button data-act="wk" data-n="0">This week</button><button data-act="wk" data-n="7">Next &#8250;</button></div>';
+ h+='<h1>'+(mon<START?'Trial week':'Week '+w)+'</h1><div class="sub">'+fmtS(mon)+' to '+fmtS(addDays(mon,6))+(mon<START?'. Trial week does not count toward the floor.':'')+'</div>';
+ h+='<div class="card '+(ws.floor?'green':'amber')+'"><div class="big3"><div><b>'+ws.wk+'</b>workouts</div><div><b>'+ws.gym+'</b>gym lift days</div><div><b>'+ws.snack+'</b>tendon snacks</div></div>';
+ h+='<div style="font-weight:800;font-size:18px">'+(ws.goal?'Goal hit. 5+ workouts with 2+ gym days.':ws.floor?'Floor hit. Goal is 5 to 6.':'Floor not hit yet: '+Math.max(0,4-ws.wk)+' more workout'+(4-ws.wk===1?'':'s')+(ws.gym<2?', '+(2-ws.gym)+' more gym lift day'+(2-ws.gym===1?'':'s'):'')+'.')+'</div><div class="small">Goal 5 to 6. Floor 4, with at least 2 gym lift days. Minimum days count.</div></div>';
+ h+='<div class="small" style="margin:6px 0">Tap a status to change it: None, Full, Minimum.</div>';
+ ws.days.forEach(({s,d,t})=>{h+='<div class="wk"><div data-act="goto" data-d="'+s+'"><b>'+DOW[dowOf(s)]+' '+fmtS(s)+'</b><div class="small">'+esc(typeName(s,t))+'</div></div><button class="st '+(d.status||'')+'" data-act="cyc" data-d="'+s+'">'+(d.status||'None')+'</button><button class="ck'+(d.snackDone?' on':'')+'" data-act="snackday" data-d="'+s+'" title="Tendon snack">&#10003;</button></div>'});
+ h+='<div class="small" style="text-align:right;margin-top:4px">Right box = tendon snack</div>';
+ h+='<h3>All weeks</h3><div class="chips">';
+ for(let i=0;i<=12;i++){const m=i===0?mondayOf(TRIAL1):addDays(START,(i-1)*7),x=weekStats(m),past=addDays(m,6)<todayS();h+='<button class="chip '+(x.goal?'g':x.floor?'y':past&&i>0?'r':'')+(m===mon?' cur':'')+'" data-act="wkgo" data-d="'+m+'">'+(i===0?'Trial':'W'+i)+' '+x.wk+'</button>'}
+ h+='</div><div class="small" style="margin-top:6px">Dark green = goal hit. Light green = floor hit. Red = missed.</div>';
+ return h;
+}
+function vHistory(){
+ const dates=Object.keys(st.days).filter(s=>{const d=st.days[s];return d.status||d.snackDone||Object.values(d.sets||{}).some(a=>a&&a.some(x=>x&&x.done))||Object.keys(d.tests||{}).length}).sort().reverse();
+ let h='<h1>History</h1>';
+ if(!dates.length)h+='<div class="card">Nothing logged yet. Your first trial run is Wed Oct 21.</div>';
+ dates.forEach(s=>{const d=st.days[s];h+='<div class="hist" data-act="goto" data-d="'+s+'"><b>'+esc(fmt(s))+'</b> <span class="tag">'+esc(typeName(s))+'</span><div class="small">'+(d.status?(d.status==='Minimum'?'Minimum day':'Full workout'):'Not marked done')+(d.snackDone?' &middot; Tendon snack':'')+'</div>';
+  Object.keys(d.sets||{}).forEach(ex=>{const t=setsStr(d.sets[ex]);if(t)h+='<div class="small"><b>'+esc(ex)+':</b> '+esc(t)+'</div>'});
+  Object.keys(d.tests||{}).forEach(k=>{if(d.tests[k])h+='<div class="small"><b>'+esc(k)+':</b> '+esc(d.tests[k])+'</div>'});
+  if(d.notes)h+='<div class="small">'+esc(d.notes)+'</div>';h+='</div>'});
+ return h;
+}
+function vBody(){
+ let h='<h1>Body</h1><div class="sub">Optional. Your body weight sets the starting-weight hints.</div><div class="card"><h3 style="margin-top:0">Add a weigh-in</h3><input type="date" id="mdate" value="'+todayS()+'"><div style="height:8px"></div><input id="mbw" inputmode="decimal" placeholder="Body weight (lb)"><div style="height:8px"></div><input id="mnotes" placeholder="Notes" style="text-align:left;font-size:16px"><div style="height:8px"></div><button class="btn full red" data-act="addmeas">Save</button></div>';
+ st.meas.slice().sort((a,b)=>a.date<b.date?1:-1).forEach(m=>{h+='<div class="hist"><b>'+esc(fmtS(m.date))+'</b>: '+esc(m.bw)+' lb <span class="small">'+esc(m.notes||'')+'</span> <button class="btn sm" style="float:right" data-act="delmeas" data-id="'+m.id+'">Delete</button></div>'});
+ return h;
+}
+function vData(){
+ let h='<h1>Data</h1><div class="sub">Everything saves on this phone (this browser). Export a backup once a week so you never lose it.</div>';
+ h+='<div class="card"><button class="btn full red" data-act="exjson">Export backup (JSON)</button><div style="height:8px"></div><button class="btn full" data-act="excsv">Export sets (CSV)</button><div style="height:8px"></div><button class="btn full" data-act="copyjson">Copy backup to clipboard</button><div style="height:8px"></div><label class="btn full" style="display:flex;align-items:center;justify-content:center">Import backup (JSON)<input type="file" id="imp" accept=".json,application/json" class="hide"></label><div class="small" style="margin-top:6px">Import replaces what is on this phone with the file.</div></div>';
+ return h;
+}
+
+/* ===== Export / import ===== */
+function download(name,text,type){const b=new Blob([text],{type});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+function csvSets(){const rows=[['Date','Week','Day','Exercise','Set #','Target reps','Weight (lb)','Reps done','Notes']];Object.keys(st.days).sort().forEach(s=>{const d=st.days[s];Object.keys(d.sets||{}).forEach(ex=>(d.sets[ex]||[]).forEach((x,i)=>{if(x&&(x.done||x.w!==''||x.r!==''))rows.push([s,weekOf(s)===0?'Trial':weekOf(s),DOW[dowOf(s)],ex,i+1,(d.reps[ex]||[])[i]==null?'':d.reps[ex][i],x.w==null?'':x.w,x.r==null?'':x.r,[typeName(s),x.done?'':'not done',d.notes||''].filter(Boolean).join('. ')])}))});
+ return rows.map(r=>r.map(c=>{c=String(c);return /[",\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c}).join(',')).join('\n')}
+
+/* ===== Events ===== */
+document.addEventListener('click',e=>{
+ const nb=e.target.closest('nav button');if(nb){view.tab=nb.dataset.tab;if(view.tab==='week')view.week=null;window.scrollTo(0,0);render();return}
+ const el=e.target.closest('[data-act]');if(!el)return;const a=el.dataset.act,s=view.date;
+ if(a==='typesel')return;
+ if(a==='day'){const n=+el.dataset.n;view.date=n===0?todayS():addDays(view.date,n);window.scrollTo(0,0);render()}
+ else if(a==='goto'){view.date=el.dataset.d;view.tab='today';window.scrollTo(0,0);render()}
+ else if(a==='chk'){const d=day(s);d.checks[el.dataset.id]=!d.checks[el.dataset.id];save();render()}
+ else if(a==='snk'){const d=day(s);d.snack[el.dataset.id]=!d.snack[el.dataset.id];const sp=snackPlan(s);if(sp.items.every(i=>d.snack[i.id]))d.snackDone=true;save();qSnack(s);render()}
+ else if(a==='snackdone'){const d=day(s);d.snackDone=el.dataset.v==='1';save();qSnack(s);render()}
+ else if(a==='snackday'){const d=day(el.dataset.d);d.snackDone=!d.snackDone;save();qSnack(el.dataset.d);render()}
+ else if(a==='timer'){startTimer(JSON.parse(el.dataset.tm))}
+ else if(a==='tstop'){stopTimer()}else if(a==='tskip'){nextStep()}
+ else if(a==='set'){const d=day(s),ex=el.dataset.ex,n=+el.dataset.n;d.sets[ex]=d.sets[ex]||[];const x=d.sets[ex][n-1]=d.sets[ex][n-1]||{w:'',r:''};
+  const row=el.closest('.setrow');const wi=row.querySelector('[data-f=w]'),ri=row.querySelector('[data-f=r]');x.w=wi.value;x.r=ri.value;
+  if(!x.done){if(x.w===''&&el.dataset.ph!=='')x.w=el.dataset.ph;const tg=el.dataset.target;if(x.r===''&&/^\d+$/.test(tg))x.r=tg;x.done=true;const rest=+el.dataset.rest;if(rest)startTimer([['Rest',rest]])}else x.done=false;
+  d.reps[ex]=repsFor(s,ex).slice();save();qSet(s,ex,n);render()}
+ else if(a==='finish'){const d=day(s);d.status=el.dataset.v||'';save();qSession(s);if(d.status)beep(3);render()}
+ else if(a==='type'){const d=day(s);d.type=el.dataset.v;save();window.scrollTo(0,0);render()}
+ else if(a==='outside'){const d=day(s);d.outside=el.dataset.v==='1';save();render()}
+ else if(a==='clock'){const d=day(s);d.clock=el.dataset.v==='1'?Date.now():null;save();render()}
+ else if(a==='wk'){const n=+el.dataset.n;view.week=n===0?null:addDays(view.week,n);if(n===0)view.date=todayS();render()}
+ else if(a==='wkgo'){view.week=el.dataset.d;render()}
+ else if(a==='cyc'){const ds=el.dataset.d,d=day(ds);d.status=({'':'Full',Full:'Minimum',Minimum:''})[d.status||''];save();qSession(ds);render()}
+ else if(a==='addmeas'){const bw=document.getElementById('mbw').value.trim();if(!bw){alert('Enter your body weight.');return}const m={id:Date.now(),date:document.getElementById('mdate').value||todayS(),bw,notes:document.getElementById('mnotes').value};st.meas.push(m);save();qMeas(m);render()}
+ else if(a==='delmeas'){const id=+el.dataset.id;const m=st.meas.find(x=>x.id===id);st.meas=st.meas.filter(x=>x.id!==id);save();if(m)queue({type:'measure',id:'m|'+m.id,date:m.date,bodyweight:'',notes:'DELETED'});render()}
+ else if(a==='exjson'){st.lastExport=new Date().toISOString();save();updPill();download('mass-mafia-45-backup-'+todayS()+'.json',JSON.stringify(st,null,1),'application/json')}
+ else if(a==='excsv'){download('mass-mafia-45-sets-'+todayS()+'.csv',csvSets(),'text/csv')}
+ else if(a==='copyjson'){const t=JSON.stringify(st);(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>alert('Backup copied. Paste it into a note or email to yourself.')).catch(()=>prompt('Copy this backup:',t))}
+});
+document.addEventListener('change',e=>{
+ const el=e.target;const s=view.date;
+ if(el.dataset.act==='typesel'){const v=el.value;if(!v)return;const d=day(s);if(v==='reset')delete d.type;else d.type=v;save();window.scrollTo(0,0);render();return}
+ if(el.dataset.f){const d=day(s),ex=el.dataset.ex,n=+el.dataset.n;d.sets[ex]=d.sets[ex]||[];const x=d.sets[ex][n-1]=d.sets[ex][n-1]||{w:'',r:''};x[el.dataset.f]=el.value;d.reps[ex]=repsFor(s,ex).slice();save();if(x.done){qSet(s,ex,n);render()}return}
+ if(el.dataset.test){const d=day(s);d.tests[el.dataset.test]=el.value;save();qTest(s,el.dataset.test,el.dataset.unit);return}
+ if(el.dataset.notes){const d=day(s);d.notes=el.value;save();if(d.status)qSession(s);return}
+ if(el.id==='imp'&&el.files[0]){const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result);if(!j||typeof j.days!=='object')throw 0;if(!confirm('Replace the data on this phone with this backup?'))return;st=j;st.meas=st.meas||[];save();alert('Backup loaded.');render()}catch(x){alert('That file is not a Mass Mafia 45 backup.')}};r.readAsText(el.files[0])}
+});
+load();render();
+</script>
+</body>
+</html>
